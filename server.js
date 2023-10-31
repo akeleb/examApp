@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleWare.js";
 import defaultRoutes from "./routes/defaultRoutes.js";
+import defaultRoutes from "./routes/examRoutes.js";
 
 dotenv.config();
 
@@ -20,12 +21,13 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 
 app.use("/", defaultRoutes);
+app.use("/exam",examRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
 const port = process.env.PORT || 5000;
 app.get("/", (req, res) => {
-  res.send("Wellcome bro, you are chasing false dreams and hopes🤣🤣");
+  res.send("Wellcome bro");
 });
 
 app.listen(port, () =>
