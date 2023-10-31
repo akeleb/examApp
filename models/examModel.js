@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 const questionArr = mongoose.Schema({
-  title: { type: String },
-  questions: { type: String },
+  question: { type: String },
   options: [{ option: String, isCorrect: Boolean, id: Number }],
   correctAnswer: { type: String },
 });
@@ -12,8 +11,9 @@ const postQuizSchema = mongoose.Schema({
     type: Date,
     default: new Date(),
   },
-});
+},
+);
 
-const PostQuiz = mongoose.model("PostQuiz", postQuizSchema);
+const Quiz = mongoose.model("Quiz", postQuizSchema);
 
-export default PostQuiz
+export default Quiz;

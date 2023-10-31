@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import colors from "colors";
-import users from "./data/users.js";
-import User from "./models/userModel.js";
+import quizes from "./data/quiz.js";
+import Quiz from "./models/examModel.js";
 
 import connectDB from "./config/db.js";
 
@@ -12,19 +12,13 @@ connectDB();
 
 const importData = async () => {
   try {
-    // await Order.deleteMany();
-    // await Product.deleteMany();
-    await User.deleteMany();
+    // // await Order.deleteMany();
+    // // await Product.deleteMany();
+    // await Quiz.deleteMany();
 
-    const createdUsers = await User.insertMany(users);
+    const createdQuiz = await Quiz.insertMany(quizes);
 
-    // const adminUser = createdUsers[0]._id;
-
-    // const sampleProducts = products.map((product) => {
-    //   return { ...product, user: adminUser };
-    // });
-
-    // await Product.insertMany(sampleProducts);
+  
     console.log("Data imported successfully".green.inverse);
     process.exit();
   } catch (error) {
@@ -38,7 +32,7 @@ const destroyData = async () => {
     try {
       // await Order.deleteMany();
       // await Product.deleteMany();
-      await User.deleteMany();
+      await Quiz.deleteMany();
 
       console.log("Data destroyed successfully".red.inverse);
       process.exit();
