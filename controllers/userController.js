@@ -3,81 +3,71 @@ import generateToken from "../utils/generateToken.js";
 import User from "../models/userModel.js";
 import { hashPassword, comparePassword } from "../utils/auth.js";
 
-// @desc..................Auth user & get token
-//@route..................Post /api/users/login
-//@access ................Public
+// Auth user and get a token
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+
   if (!email || !password) {
-    res.status(400);
-    throw new Error("please enter your email and password!");
+    return res.status(400).json({ message: "Please enter your email and password." });
   }
-  const user = await User.findOne({ email: email });
-  // const check = await User.findOne({ email, isVerified: true }).exec();
+
+  const user = await User.findOne({ email });
 
   if (!user) {
-    res.status(401);
-    throw new Error("user not found with this email");
+    return res.status(401).json({ message: "User not found with this email." });
   }
-  const match = await comparePassword(password, user.password);
-  if (!match) {
-    res.status(401);
-    throw new Error("Password is incorrect");
+
+  const passwordMatch = await comparePassword(password, user.password);
+
+  if (!passwordMatch) {
+    return res.status(401).json({ message: "Password is incorrect." });
   }
-  if (user && match && user.isVerified) {
-    res.json({
+
+  if (user.isVerified) {
+    const token = generateToken(user._id);
+    return res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
-      token: generateToken(user._id),
+      token,
     });
   } else {
-    res.status(401);
-    throw new Error("Something went wrong");
+    return res.status(401).json({ message: "Something went wrong." });
   }
 });
 
-//@desc..................Register a new user
-//@route..................Post/api/users
-//@access ................Public
+// Register a new user
 const registerUser = asyncHandler(async (req, res) => {
-  const {
-    name,
-    email,
-    password,
-    } = req.body;
-  if (
-    !name ||
-    !email ||
-    !password
-  
-  ) {
-    res.status(400);
-    throw new Error("please enter all information");
+  const { name, email, password } = req.body;
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: "Please enter all required information." });
   }
+
   const userExists = await User.findOne({ email });
+
   if (userExists) {
-    res.status(400);
-    throw new Error("A user is found with the same email you entered");
-  } else if (await User.findOne({ phone })) {
-    throw new Error("A user found with the same phone number you entered");
+    return res.status(400).json({ message: "A user with the same email already exists." });
   }
+
   const hashedPassword = await hashPassword(password);
+
   const user = await User.create({
     name,
     email,
     password: hashedPassword,
   });
+
   if (user) {
-    res.status(201).json({
+    const token = generateToken(user._id);
+    return res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
-      token: generateToken(user._id),
+      token,
     });
   } else {
-    res.status(400);
-    throw new Error("Invalid user data");
+    return res.status(400).json({ message: "Invalid user data." });
   }
 });
 

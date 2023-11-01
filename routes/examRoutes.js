@@ -1,19 +1,22 @@
 import express from "express";
-
 import {
   createExam,
-  getExam,
-  getAllExams
+  getExamById,
+  getAllExams,
 } from "../controllers/examController.js";
 import { protect, admin, protectAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router
-  .route("/")
-  .post(protectAdmin, admin, createExam)
-  .get(protect, getAllExams);
-router.route("/all-exams").get(protect, getAllExams);
-router.route("/:id").get(protect, getExamById);
+// Define routes using a consistent pattern
+router.route("/")
+  .post(protectAdmin, admin, createExam) // POST /api/exams
+  .get(protect, getAllExams); // GET /api/exams
+
+router.route("/all-exams")
+  .get(protect, getAllExams); // GET /api/exams/all-exams
+
+router.route("/:id")
+  .get(protect, getExamById); // GET /api/exams/:id
 
 export default router;
