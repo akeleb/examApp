@@ -1,13 +1,7 @@
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
 
 const adminSchema = mongoose.Schema(
   {
-    picture: {
-      type: String,
-      required: true,
-      default: " ",
-    },
     name: {
       type: String,
       required: true,
@@ -25,15 +19,6 @@ const adminSchema = mongoose.Schema(
       type: Boolean,
       require:true,
       default:false
-    },
-    isVerified: {
-      type: Boolean,
-      required: true,
-      default: true,
-    },
-    emailVerficationCode: {
-      data: String,
-      default: "",
     },
     
   },
